@@ -1,0 +1,253 @@
+<html><head></head><body><div class="apidocDiv">
+<style>
+/*csslint
+*/
+.apidocDiv {
+    background: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+}
+.apidocDiv a[href] {
+    color: #33f;
+    font-weight: bold;
+    text-decoration: none;
+}
+.apidocDiv a[href]:hover {
+    text-decoration: underline;
+}
+.apidocCodeCommentSpan {
+    background: #bbf;
+    color: #000;
+    display: block;
+}
+.apidocCodeKeywordSpan {
+    color: #d00;
+    font-weight: bold;
+}
+.apidocCodePre {
+    background: #eef;
+    border: 1px solid;
+    color: #777;
+    padding: 5px;
+    white-space: pre-wrap;
+}
+.apidocFooterDiv {
+    margin-top: 20px;
+    text-align: center;
+}
+.apidocModuleLi {
+    margin-top: 10px;
+}
+.apidocSectionDiv {
+    border-top: 1px solid;
+    margin-top: 20px;
+}
+.apidocSignatureSpan {
+    color: #777;
+    font-weight: bold;
+}
+</style>
+<h1>api documentation for
+    <a>sha256 (v0.2.0)</a>
+</h1>
+<h4>Compute SHA256 of bytes or strings.</h4>
+<div class="apidocSectionDiv"><a href="#apidoc.tableOfContents" id="apidoc.tableOfContents"><h1>table of contents</h1></a><ol>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.sha256">module sha256</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.sha256.sha256">
+            function <span class="apidocSignatureSpan"></span>sha256
+            <span class="apidocSignatureSpan">(message, options)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.sha256.x2">
+            function <span class="apidocSignatureSpan">sha256.</span>x2
+            <span class="apidocSignatureSpan">(message, options)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+    <li class="apidocModuleLi"><a href="#apidoc.module.sha256.sha256">module sha256.sha256</a><ol>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.sha256.sha256.sha256">
+            function <span class="apidocSignatureSpan">sha256.</span>sha256
+            <span class="apidocSignatureSpan">(message, options)</span>
+            </a>
+
+        </li>
+
+        <li>
+
+            <a class="apidocElementLiA" href="#apidoc.element.sha256.sha256.x2">
+            function <span class="apidocSignatureSpan">sha256.sha256.</span>x2
+            <span class="apidocSignatureSpan">(message, options)</span>
+            </a>
+
+        </li>
+
+    </ol></li>
+
+</ol></div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.sha256" id="apidoc.module.sha256">module sha256</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.sha256.sha256" id="apidoc.element.sha256.sha256">
+        function <span class="apidocSignatureSpan"></span>sha256
+        <span class="apidocSignatureSpan">(message, options)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function sha256(message, options) {;
+  if (message.constructor === String) {
+    message = _imports.convertString.UTF8.stringToBytes(message);
+  }
+
+  var H =[ 0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A,
+           0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19 ];
+
+  var m = bytesToWords(message);
+  var l = message.length * 8;
+
+  m[l &gt;&gt; 5] |= 0x80 &lt;&lt; (24 - l % 32);
+  m[((l + 64 &gt;&gt; 9) &lt;&lt; 4) + 15] = l;
+
+  for (var i=0 ; i&lt;m.length; i += 16) {
+    processBlock(H, m, i);
+  }
+
+  var digestbytes = wordsToBytes(H);
+  return options &amp;&amp; options.asBytes ? digestbytes :
+         options &amp;&amp; options.asString ? _imports.convertString.bytesToString(digestbytes) :
+         _imports.bytesToHex(digestbytes)
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.sha256.x2" id="apidoc.element.sha256.x2">
+        function <span class="apidocSignatureSpan">sha256.</span>x2
+        <span class="apidocSignatureSpan">(message, options)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">x2 = function (message, options) {
+	return sha256(sha256(message, { asBytes:true }), options)
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+## Usage
+
+There are two methods, one for computing the hash of the input, and one for double-hashing it:
+
+```js
+sha256('hello');   // "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"
+sha256.<span class="apidocCodeKeywordSpan">x2</span>('hello'); // "d7914fe546b684688bb95f4f888a92dfc680603a75f23eb823658031fff766d9
+"
+```
+
+Input is either an array of bytes or a string. **String are always interpreted as binary data**; if you have a hex-encoded string
+ of data to parse, first convert it to a binary string or array of bytes.
+
+Output by default is a hexadecimal-encoded string. Other options are an array of bytes, or a binary-encoded string:
+
+```js
+...</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocSectionDiv">
+<h1><a href="#apidoc.module.sha256.sha256" id="apidoc.module.sha256.sha256">module sha256.sha256</a></h1>
+
+
+    <h2>
+        <a href="#apidoc.element.sha256.sha256.sha256" id="apidoc.element.sha256.sha256.sha256">
+        function <span class="apidocSignatureSpan">sha256.</span>sha256
+        <span class="apidocSignatureSpan">(message, options)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">function sha256(message, options) {;
+  if (message.constructor === String) {
+    message = _imports.convertString.UTF8.stringToBytes(message);
+  }
+
+  var H =[ 0x6A09E667, 0xBB67AE85, 0x3C6EF372, 0xA54FF53A,
+           0x510E527F, 0x9B05688C, 0x1F83D9AB, 0x5BE0CD19 ];
+
+  var m = bytesToWords(message);
+  var l = message.length * 8;
+
+  m[l &gt;&gt; 5] |= 0x80 &lt;&lt; (24 - l % 32);
+  m[((l + 64 &gt;&gt; 9) &lt;&lt; 4) + 15] = l;
+
+  for (var i=0 ; i&lt;m.length; i += 16) {
+    processBlock(H, m, i);
+  }
+
+  var digestbytes = wordsToBytes(H);
+  return options &amp;&amp; options.asBytes ? digestbytes :
+         options &amp;&amp; options.asString ? _imports.convertString.bytesToString(digestbytes) :
+         _imports.bytesToHex(digestbytes)
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">n/a</pre></li>
+    </ul>
+
+
+
+    <h2>
+        <a href="#apidoc.element.sha256.sha256.x2" id="apidoc.element.sha256.sha256.x2">
+        function <span class="apidocSignatureSpan">sha256.sha256.</span>x2
+        <span class="apidocSignatureSpan">(message, options)</span>
+        </a>
+    </h2>
+    <ul>
+    <li>description and source-code<pre class="apidocCodePre">x2 = function (message, options) {
+  return sha256(sha256(message, { asBytes:true }), options)
+}</pre></li>
+    <li>example usage<pre class="apidocCodePre">...
+
+## Usage
+
+There are two methods, one for computing the hash of the input, and one for double-hashing it:
+
+```js
+sha256('hello');   // "2cf24dba5fb0a30e26e83b2ac5b9e29e1b161e5c1fa7425e73043362938b9824"
+sha256.<span class="apidocCodeKeywordSpan">x2</span>('hello'); // "d7914fe546b684688bb95f4f888a92dfc680603a75f23eb823658031fff766d9
+"
+```
+
+Input is either an array of bytes or a string. **String are always interpreted as binary data**; if you have a hex-encoded string
+ of data to parse, first convert it to a binary string or array of bytes.
+
+Output by default is a hexadecimal-encoded string. Other options are an array of bytes, or a binary-encoded string:
+
+```js
+...</pre></li>
+    </ul>
+
+
+</div>
+
+<div class="apidocFooterDiv">
+    [ this document was created with
+    <a href="https://github.com/kaizhu256/node-utility2" target="_blank">utility2</a>
+    ]
+</div>
+</div>
+</body></html>
